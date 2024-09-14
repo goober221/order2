@@ -1,8 +1,15 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+}
+
+.container {
+  max-width: 90vw;
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .logo {
