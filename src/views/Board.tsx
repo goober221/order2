@@ -7,6 +7,7 @@ const Board = () => {
     const [data, setData] = useState<BoardData | null >(null);
 
     useEffect(() => {
+        console.log('aaa');
         axios.get<BoardData>('/api/b/catalog.json')
             .then((response) => {
                 setData(response.data);
