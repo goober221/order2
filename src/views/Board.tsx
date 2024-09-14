@@ -12,7 +12,7 @@ const Board = () => {
                 setData(response.data);
             })
             .catch((error) => {
-                console.error('Error fetching data:', error);
+                console.error('Error fetching data from 2ch:', error);
             });
     }, []);
 
