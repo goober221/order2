@@ -5,15 +5,16 @@ import Board from "./views/Board.tsx";
 import Thread from "./views/Thread.tsx";
 
 function App() {
-
-
   return (
-    <BrowserRouter>
-        <Routes>
-            <Route path="/" element={<Board />}></Route>
-            <Route path="/thread/:id" element={<Thread />} />
-        </Routes>
-    </BrowserRouter>
+      <>
+          <BrowserRouter>
+              <Routes>
+                  <Route path="/" element={<Board />}></Route>
+                  <Route path="/thread/:id" element={<Thread />} />
+              </Routes>
+          </BrowserRouter>
+      </>
+
   )
 }
 

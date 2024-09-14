@@ -44,7 +44,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
                 <div className="flex-1 mt-5 md:mt-0 md:ml-5">
                     <div>
                         <p
-                            className="text-left text-sm md:text-base mb-4"
+                            className="text-left text-sm md:text-base mb-4 s:text-2xl"
                             dangerouslySetInnerHTML={{ __html: isExpanded ? fullComment : truncatedComment }}
                         ></p>
 

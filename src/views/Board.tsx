@@ -7,7 +7,7 @@ const Board = () => {
     const [data, setData] = useState<BoardData | null>(null);
 
     useEffect(() => {
-        axios.get<BoardData>('https://2ch.hk/b/catalog.json')
+        axios.get<BoardData>('/api/b/catalog.json')
             .then((response) => {
                 setData(response.data);
             })
