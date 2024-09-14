@@ -7,23 +7,23 @@ const Board = () => {
     const [data, setData] = useState<BoardData | null>(null);
 
     useEffect(() => {
-        axios.get<BoardData>('https://2ch.hk/b/catalog.json')
+        axios.get<BoardData>('/api/b/catalog.json')
             .then((response) => {
                 setData(response.data);
             })
             .catch((error) => {
+                setData(error)
                 console.error('Error fetching data from 2ch:', error);
             });
     }, []);
 
     return (
-        <div>
             <div className="gap-2">
-                {data?.threads.map((thread) => (
+                {data?.threads?.map((thread) => (
                     <ThreadCard key={thread.num} thread={thread}/>
                 ))}
+                <p>{data}</p>
             </div>
-        </div>
     );
 };
 

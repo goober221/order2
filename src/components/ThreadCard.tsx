@@ -1,5 +1,5 @@
 import {Thread} from "../models/Thread.ts";
-import '../App.css'
+import '../styles/ThreadCard.css'
 import React, {useState} from "react";
 import SlideShow from "./SlideShow.tsx";
 import {Link} from "react-router-dom";
@@ -17,18 +17,27 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
     const closeSlider = () => setIsSliderOpen(false);
 
     const maxLength = 500;
+    const tolerance = 10;
     const fullComment = thread.comment || "";
-    const truncatedComment = fullComment.length > maxLength
+    const truncatedComment = fullComment.length > maxLength + tolerance
         ? fullComment.substring(0, maxLength) + "..."
         : fullComment;
 
+    const scrollToDiv = () => {
+        const element = document.getElementById(`thread-${thread.num}`);  // '1' is the ID of the div
+        if (element) {
+            element.scrollIntoView({ behavior: 'instant' });
+        }
+    };
+
     const toggleExpand = () => {
+        scrollToDiv();
         setIsExpanded(!isExpanded);
     };
 
     return (
         <>
-            <div className="relative m-2 bg-amber-400 border-2 border-indigo-600 flex flex-col md:flex-row p-3">
+            <div id={`thread-${thread.num}`} className="relative m-2 bg-amber-400 border-2 border-indigo-600 flex flex-col lg:flex-row p-3">
                 <div className="absolute right-2 top-2">
                     <Link
                         to={'thread/' + thread.num}
@@ -44,14 +53,14 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread }) => {
                 <div className="flex-1 mt-5 md:mt-0 md:ml-5">
                     <div>
                         <p
-                            className="text-left text-sm md:text-base mb-4 s:text-2xl"
+                            className="comment text-left text-sm mb-4 md:text-5xl lg:text-base"
                             dangerouslySetInnerHTML={{ __html: isExpanded ? fullComment : truncatedComment }}
                         ></p>
 
                         {fullComment.length > maxLength && (
                             <button
                                 onClick={toggleExpand}
-                                className="bg-transparent text-blue-500 hover:underline focus:outline-none"
+                                className="bg-transparent text-blue-500 hover:underline focus:outline-none md:text-5xl lg:text-base"
                             >
                                 {isExpanded ? 'Скрыть' : 'Показать полный текст'}
                             </button>

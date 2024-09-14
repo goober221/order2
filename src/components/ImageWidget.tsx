@@ -7,7 +7,7 @@ interface ImageWidgetProps {
 }
 
 const ImageWidget: React.FC<ImageWidgetProps> = ({ files, showSlideShow }) => {
-    const baseURL = 'https://2ch.hk/';
+    const baseURL = '/api/';
     return (
         <>
             <div className="m-3 flex flex-col items-center justify-center">
