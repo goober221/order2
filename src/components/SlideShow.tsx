@@ -16,7 +16,7 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
     const [isDragging, setIsDragging] = useState(false); // State for dragging
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 }); // Starting drag position
     const [position, setPosition] = useState({ left: 0, top: 0 }); // Position of the container
-    const baseURL = '/api/';
+    const baseURL = 'https://2ch.hk/';
 
     const handlers = useSwipeable({
         onSwipedLeft: () => handleNext(),
