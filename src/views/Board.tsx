@@ -20,6 +20,7 @@ const Board = () => {
 
     return (
             <div className="gap-2">
+                <p>aaa</p>
                 {data?.threads?.map((thread) => (
                     <ThreadCard key={thread.num} thread={thread}/>
                 ))}
