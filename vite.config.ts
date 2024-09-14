@@ -7,14 +7,14 @@ export default defineConfig({
   build: {
     outDir: './docs'
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://2ch.hk',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'https://2ch.hk',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ''),
+  //     },
+  //   },
+  // },
   base: './'
 });
