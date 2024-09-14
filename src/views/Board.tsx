@@ -4,7 +4,7 @@ import {BoardData} from "../models/BoardData.ts";
 import axios from "axios";
 
 const Board = () => {
-    const [data, setData] = useState<BoardData | null | any>(null);
+    const [data, setData] = useState<BoardData | null >(null);
 
     useEffect(() => {
         axios.get<BoardData>('/api/b/catalog.json')
@@ -13,16 +13,15 @@ const Board = () => {
             })
             .catch((error) => {
                 setData(error)
-                console.error('Error fetching data from 2ch:', error);
+                console.log('Error fetching data from 2ch:', error);
             });
     }, []);
 
     return (
             <div className="gap-2">
-                {data?.threads?.map((thread: any) => (
+                {data?.threads?.map((thread) => (
                     <ThreadCard key={thread.num} thread={thread}/>
                 ))}
-                <p>{data ?? 'no error'}</p>
             </div>
     );
 };
