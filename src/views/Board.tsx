@@ -5,6 +5,7 @@ import axios from "axios";
 
 const Board = () => {
     const [data, setData] = useState<BoardData | null >(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         axios.get<BoardData>('https://2ch.hk/b/catalog.json')
@@ -12,7 +13,7 @@ const Board = () => {
                 setData(response.data);
             })
             .catch((error) => {
-                setData(error)
+                setError(error);
                 console.log('Error fetching data from 2ch:', error);
             });
     }, []);
@@ -22,6 +23,7 @@ const Board = () => {
                 {data?.threads?.map((thread) => (
                     <ThreadCard key={thread.num} thread={thread}/>
                 ))}
+                {error ? (<p>{error}</p>) : null}
             </div>
     );
 };
