@@ -1,0 +1,10 @@
+.min-h-40vh {
+    min-height: 40vh;
+}
+
+.max-h-350px {
+    max-height: 250px !important;
+}
+.max-h-50p{
+    max-height: 50% !important;
+}

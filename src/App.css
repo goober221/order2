@@ -9,7 +9,7 @@
 
 .container {
   max-width: 90vw;
-  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  box-sizing: border-box;
 }
 
 .logo {

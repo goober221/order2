@@ -7,10 +7,11 @@ import { useSwipeable } from 'react-swipeable';
 interface SlideShowProps {
     files: ThreadFile[];
     onClose: () => void;
+    selectedFileIndex: string;
 }
 
-const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
-    const [currentIndex, setCurrentIndex] = useState(0);
+const SlideShow: React.FC<SlideShowProps> = ({ files, onClose, selectedFileIndex }) =>{
+    const [currentIndex, setCurrentIndex] = useState(+selectedFileIndex);
     const mediaRef = useRef<HTMLDivElement>(null);
     const [zoomScale, setZoomScale] = useState(1);
     const [isDragging, setIsDragging] = useState(false); // State for dragging
@@ -25,7 +26,7 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
     });
 
     const handleNext = () => {
-        console.log(currentFile.path);
+
         setCurrentIndex((prev) => {
             const newIndex = prev === files.length - 1 ? 0 : prev + 1;
             console.log('Next image, newIndex:', newIndex);
@@ -81,17 +82,14 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
     };
 
     useEffect(() => {
-        // Add event listener for overlay clicks
         document.addEventListener('mousedown', handleOverlayClickWrapper);
         document.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseup', handleMouseUp);
 
-        // Add event listener for mouse wheel zoom
         if (mediaRef.current) {
             mediaRef.current.addEventListener('wheel', handleWheel);
         }
 
-        // Clean up event listeners on component unmount
         return () => {
             document.removeEventListener('mousedown', handleOverlayClickWrapper);
             document.removeEventListener('mousemove', handleMouseMove);
@@ -101,6 +99,7 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
             }
         };
     }, [isDragging, dragStart]);
+
 
     const currentFile = files[currentIndex];
 
@@ -117,10 +116,9 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
                      cursor: isDragging ? 'grabbing' : 'grab',
                  }}
                  onMouseDown={handleMouseDown} {...handlers} ref={mediaRef}>
-                <div className="slider-navigation">
-                    {files.length > 1 ? (<button className="slider-prev" onClick={handlePrev}>
-                        &#10094;
-                    </button>) : null}
+                <div className="slider-navigation relative">
+                    <div className="absolute h-full w-1/3" onClick={handlePrev}></div>
+                    <div className="absolute h-full w-1/3 right-0" onClick={handleNext}></div>
                     <div className="slider-media"
                     >
                         {currentFile.type === 1 || currentFile.type === 2 ? (
@@ -136,14 +134,11 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose }) =>{
                                 className="slider-video"
                                 autoPlay={true}
                             >
-                                <source src={baseURL + currentFile.path} type="video/mp4"/>
+                                <source src={baseURL + currentFile.path} type={'video/' + currentFile.path.split('.').pop()}/>
                                 Your browser does not support the video tag.
                             </video>
                         )}
                     </div>
-                    {files.length > 1 ? (<button className="slider-next" onClick={handleNext}>
-                        &#10095;
-                    </button>) : null}
                 </div>
             </div>
         </div>
