@@ -29,7 +29,6 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose, selectedFileIndex
 
         setCurrentIndex((prev) => {
             const newIndex = prev === files.length - 1 ? 0 : prev + 1;
-            console.log('Next image, newIndex:', newIndex);
             return newIndex;
         });
     };
@@ -37,7 +36,6 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose, selectedFileIndex
     const handlePrev = () => {
         setCurrentIndex((prev) => {
             const newIndex = prev === 0 ? files.length - 1 : prev - 1;
-            console.log('Previous image, newIndex:', currentIndex);
             return newIndex;
         });
     };

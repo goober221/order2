@@ -16,12 +16,12 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({ files, showSlideShow, isMobil
             <div className={`m-3 flex gap-2 ${isMobile ? 'flex-col items-center h-1/2' : 'flex-row items-start w-1/4'}`}>
                 <div className={`flex-shrink-0 ${isMobile ? 'w-full' : `${files.length > 1 ? 'w-4/5' : 'w-full'}`} ${nsfwMode ? 'opacity-10' : ''}`}>
                     <img
-                        className="mt-3 object-contain w-full max-h-350px cursor-pointer"
+                        className={`mt-3 object-contain w-full  cursor-pointer ${isMobile ? 'max-h-36' : 'max-h-250px'}`}
                         onClick={() => showSlideShow('0')}
                         src={baseURL + files[0].thumbnail}
                         alt={files[0].displayname}
                     />
-                    <p>{files[0].displayname}</p>
+                    <p className="text-black dark:text-white">{files[0].displayname}</p>
                 </div>
 
                 {files.length > 1 && (
@@ -32,7 +32,7 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({ files, showSlideShow, isMobil
                             <div className={`${isMobile ? 'h-full w-auto ' : 'w-full h-auto'} ${nsfwMode ? 'opacity-10' : ''}`} key={i}>
                                 <img
                                     key={file.path}
-                                    className={`object-contain cursor-pointer ${isMobile ? 'w-auto max-h-16' : 'w-full h-full mb-2'} `}
+                                    className={`object-contain cursor-pointer ${isMobile ? 'w-auto max-h-14' : 'w-full h-full mb-2'} `}
                                     onClick={() => showSlideShow((i + 1).toString())}
                                     src={baseURL + file.thumbnail}
                                     alt={file.displayname}
