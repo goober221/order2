@@ -2,19 +2,18 @@
 // Function to hide or show a thread
 import {enqueueSnackbar} from "notistack";
 import {isElementInViewport} from "./utilities.ts";
+import {FavedThread} from "../models/Thread.ts";
 
 export function hideThread(threadNumber: string, setHiddenThreads: React.Dispatch<React.SetStateAction<string[]>>) {
     setHiddenThreads(prev => {
         let updatedThreads = [...prev];
         if (updatedThreads.includes(threadNumber)) {
             updatedThreads = updatedThreads.filter(i => i !== threadNumber);
-            snackbarActions('Тред показан.')
             return updatedThreads;
         } else {
             updatedThreads = [...updatedThreads, threadNumber];
         }
         localStorage.setItem('hiddenThreads', updatedThreads.join(','));
-        snackbarActions('Тред скрыт.')
         return updatedThreads;
     });
 }
@@ -27,19 +26,23 @@ export function scrollToThreadIfNotVisible(threadNumber: string) {
     }
 }
 
-export function favThread(threadNumber: string, setHavedThreads: React.Dispatch<React.SetStateAction<string[]>>) {
-    setHavedThreads(prev => {
+export function favThread(threadNumber: string, postCount: number | undefined, title: string | undefined, setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>, showNotification: boolean = true) {
+    setFavedThreads(prev => {
         let updatedThreads = [...prev];
-        if (updatedThreads.includes(threadNumber)) {
-            updatedThreads = updatedThreads.filter(i => i !== threadNumber);
-            snackbarActions('Тред удален из избранного.')
-            return updatedThreads;
+
+        if (updatedThreads.find(t => t.num === threadNumber)) {
+            updatedThreads = updatedThreads.filter(t => t.num !== threadNumber);
         } else {
-            updatedThreads = [...updatedThreads, threadNumber];
+            const newThread: FavedThread = {
+                num: threadNumber,
+                posts_old: postCount ?? 0,
+                posts_new: 0,
+                title: title
+            }
+            updatedThreads = [...updatedThreads, newThread];
         }
-        localStorage.setItem('favedThreads', updatedThreads.join(','));
-        snackbarActions('Тред добавлен в избранное.')
-        return updatedThreads;
+        saveFavedThreads(updatedThreads);
+        return parseFavedThreads();
     });
 }
 
@@ -52,6 +55,22 @@ export function checkThreadIsHidden(threadNumber: string): boolean {
     }
     return false;
 }
+
+export const parseFavedThreads = (): FavedThread[] => {
+    const favedThreads = localStorage.getItem('favedThreads');
+    if (!favedThreads) return [];
+    return favedThreads.split('{}').map(thread => {
+        const [num, posts_old, posts_new, title] = thread.split('/').map(value => value.split('=')[1]);
+        return { num, posts_old: Number(posts_old), posts_new: Number(posts_new), title };
+    });
+};
+
+export const saveFavedThreads = (threads: FavedThread[]) => {
+    const favedThreadsString = threads
+        .map(thread => `num=${thread.num}/posts_old=${thread.posts_old}/posts_new=${thread.posts_new}/title=${thread.title}`)
+        .join('{}');
+    localStorage.setItem('favedThreads', favedThreadsString);
+};
 
 function snackbarActions(message: string) {
     enqueueSnackbar(message, {

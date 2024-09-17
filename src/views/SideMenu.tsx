@@ -1,8 +1,12 @@
 import React, {useEffect, useState } from "react";
 import useDarkMode from "../effects/udeDarkMode.ts";
 import {useSwipeable} from "react-swipeable";
+import axios from "axios";
+import {BoardData} from "../models/BoardData.ts";
+import {favThread, parseFavedThreads, saveFavedThreads} from "../helpers/thread-management.ts";
+import {FavedThread} from "../models/Thread.ts";
 
-const SideMenu:React.FC<SideMenuProps> = () => {
+const SideMenu:React.FC = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const [isDarkMode, toggleDarkMode] = useDarkMode();
@@ -12,17 +16,28 @@ const SideMenu:React.FC<SideMenuProps> = () => {
     }
 
     const [nsfwMode, setNsfwMode] = useState<boolean>(getNsfwMode());
+    const [favedThreads, setFavedThreads] = useState<FavedThread[]>(parseFavedThreads());
 
     const setNsfwModeAction = () => {
-        const currentNsfw =  localStorage.getItem('nsfw') === "1";
+        const currentNsfw = localStorage.getItem('nsfw') === "1";
         const newState = currentNsfw ? "0" : "1";
         setNsfwMode(newState === '1');
+        console.info(`nsfwMode is ${nsfwMode ? 'off' : 'on'}`);
         localStorage.setItem('nsfw', newState);
     }
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
+        if (!menuOpen) {
+            fetchThreadData();
+        }
     };
+
+    const handlers = useSwipeable({
+        onSwipedLeft: () => setMenuOpen(false),
+        onSwipedRight: () => setMenuOpen(true),
+        trackMouse: true
+    });
 
     useEffect(() => {
         if (menuOpen) {
@@ -35,30 +50,77 @@ const SideMenu:React.FC<SideMenuProps> = () => {
         };
     }, [menuOpen]);
 
-    const handlers = useSwipeable({
-        onSwipedLeft: () => setMenuOpen(false),
-        onSwipedRight: () => setMenuOpen(true),
-        trackMouse: true
-    });
+    const handleToggleFav = (threadNumber: string, postCount: number, title?: string) => {
+        favThread(threadNumber, postCount, title, setFavedThreads, false);
+    };
+
+    const fetchThreadData = () => {
+        setFavedThreads(parseFavedThreads());
+        const favedNums = favedThreads.map(thread => thread.num);
+        favedNums.forEach(threadNum => {
+            if (!threadNum) {
+                return;
+            }
+
+            axios.get<BoardData>(`/api/b/res/${threadNum}.json`)
+                .then((response) => {
+                    const posts_count  = response.data.threads[0].posts?.length ?? 0;
+                    const updatedData = favedThreads.map(thread => {
+                        if (thread.num === threadNum) {
+                            return {
+                                ...thread,
+                                posts_old:  thread.posts_old < posts_count ? posts_count : thread.posts_old,
+                                posts_new: thread.posts_old < posts_count ? posts_count - thread.posts_old : 0,
+                                title: thread.title
+                            }
+                        }
+                        return {...thread};
+                    });
+                    saveFavedThreads(updatedData);
+
+                })
+                .catch((error) => {
+                    if (error.status === 404) {
+                        saveFavedThreads(favedThreads.filter(thread => thread.num !== threadNum));
+                    }
+                    console.log('Error fetching data from 2ch:', error);
+                });
+            setFavedThreads(parseFavedThreads());
+        });
+    };
+
+    // Fetch thread data on component mount and every 60 seconds
+    useEffect(() => {
+        fetchThreadData();
+
+        const interval = setInterval(() => {
+            fetchThreadData();
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="relative"  {...handlers}>
+            <div className="bg-transparent h-100vh w-1/5 fixed top-0 left-0"></div>
             <div
                 className={`fixed top-4 p-2 z-50 rounded transition-all bg-black dark:bg-white dark:text-black bg-opacity-35 dark:bg-opacity-35 duration-300 transform ${
-                    menuOpen ? "right-4" : "left-4"
+                    menuOpen ? "right-4" : "left-4 "
                 }`}
                 onClick={toggleMenu}
             >
-                {menuOpen ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                {menuOpen ?
+
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                                  stroke="currentColor" className="size-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
                     </svg>
                     :
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                         stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round"
-                              d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
-                    </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
+                        </svg>
                 }
             </div>
 
@@ -67,12 +129,41 @@ const SideMenu:React.FC<SideMenuProps> = () => {
                     menuOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
-                <h1 className="mt-5 text-2xl text-black dark:text-white">Избранное</h1>
+            <h1 className="mt-5 text-2xl text-black dark:text-white">Избранное</h1>
                 <ul className="p-6 space-y-4 text-black dark:text-white">
-                    <li className="hover:bg-gray-700 hover:text-white p-2 rounded">Mock Item 1</li>
-                    <li className="hover:bg-gray-700 hover:text-white p-2 rounded">Mock Item 2</li>
-                    <li className="hover:bg-gray-700 hover:text-white p-2 rounded">Mock Item 3</li>
-                    <li className="hover:bg-gray-700 hover:text-white p-2 rounded">Mock Item 4</li>
+                    {favedThreads.map((thread) => (
+                        <li
+                            key={thread.num}
+                            className="flex items-center justify-between space-x-2 p-2 border-b dark:border-gray-700"
+                        >
+                            {/* Thread number and title */}
+                            <div className="flex-1 overflow-hidden">
+                            <span className="block text-start text-sm font-medium truncate">
+                              {thread.title}
+                            </span>
+                                                </div>
+                                                {/* Delete icon */}
+                                                <span
+                                                    className="cursor-pointer text-red-500 hover:text-red-700"
+                                                    onClick={() => handleToggleFav(thread.num.toString(), 0)}
+                                                >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="w-6 h-6"
+                            >
+                              <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </span>
+                        </li>
+                    ))}
                 </ul>
                 <div className="absolute bottom-2 w-full flex items-center justify-center">
                     <button className="mr-3 dark:text-white" onClick={setNsfwModeAction}>NSFW</button>
