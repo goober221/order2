@@ -51,7 +51,7 @@ const SideMenu:React.FC = () => {
     }, [menuOpen]);
 
     const handleToggleFav = (threadNumber: string, postCount: number, title?: string) => {
-        favThread(threadNumber, postCount, title, setFavedThreads, false);
+        favThread(threadNumber, postCount, title, setFavedThreads);
     };
 
     const fetchThreadData = () => {

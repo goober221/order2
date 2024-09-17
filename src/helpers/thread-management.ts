@@ -1,6 +1,3 @@
-
-// Function to hide or show a thread
-import {enqueueSnackbar} from "notistack";
 import {isElementInViewport} from "./utilities.ts";
 import {FavedThread} from "../models/Thread.ts";
 
@@ -26,7 +23,7 @@ export function scrollToThreadIfNotVisible(threadNumber: string) {
     }
 }
 
-export function favThread(threadNumber: string, postCount: number | undefined, title: string | undefined, setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>, showNotification: boolean = true) {
+export function favThread(threadNumber: string, postCount: number | undefined, title: string | undefined, setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>) {
     setFavedThreads(prev => {
         let updatedThreads = [...prev];
 
@@ -71,13 +68,3 @@ export const saveFavedThreads = (threads: FavedThread[]) => {
         .join('{}');
     localStorage.setItem('favedThreads', favedThreadsString);
 };
-
-function snackbarActions(message: string) {
-    enqueueSnackbar(message, {
-        preventDuplicate: true,
-        anchorOrigin: {
-            vertical: 'bottom',
-            horizontal: 'center',
-        }
-    })
-}
