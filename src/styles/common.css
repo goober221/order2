@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .min-h-40vh {
     min-height: 40vh;
 }
@@ -7,4 +11,25 @@
 }
 .max-h-50p{
     max-height: 50% !important;
+}
+
+.h-100vh {
+    height: 100vh !important;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+@layer utilities {
+    .truncate-fade::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 2rem;
+        pointer-events: none;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    }
 }

@@ -11,4 +11,6 @@ export interface ThreadFile {
     tn_width: number;
     type: number;
     width: number;
+    duration?: string;
+    duration_secs?: number;
 }
