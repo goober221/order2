@@ -7,9 +7,11 @@ import {FavedThread} from "../models/Thread.ts";
 
 interface PageData {
     isMobile: boolean;
+    favedThreads: FavedThread[];
+    setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>;
 }
 
-const Board: React.FC<PageData> = ({ isMobile }) => {
+const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads }) => {
     const [data, setData] = useState<BoardData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
@@ -18,14 +20,11 @@ const Board: React.FC<PageData> = ({ isMobile }) => {
         return storedThreads ? storedThreads.split(',') : [];
     });
 
-    const [favedThreads, setFavedThreads] = useState<FavedThread[]>(parseFavedThreads());
-
     const handleToggleHide = (threadNumber: string) => {
         hideThread(threadNumber, setHiddenThreads);
     };
 
     const handleToggleFav = (threadNumber: string, postCount: number, title?: string) => {
-        debugger;
         setFavedThreads(parseFavedThreads());
         favThread(threadNumber, postCount, title, setFavedThreads);
     };

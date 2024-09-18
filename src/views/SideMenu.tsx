@@ -6,7 +6,12 @@ import {BoardData} from "../models/BoardData.ts";
 import {favThread, parseFavedThreads, saveFavedThreads} from "../helpers/thread-management.ts";
 import {FavedThread} from "../models/Thread.ts";
 
-const SideMenu:React.FC = () => {
+interface SideMenuProps {
+    favedThreads: FavedThread[];
+    setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>;
+}
+
+const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads}) => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const [isDarkMode, toggleDarkMode] = useDarkMode();
@@ -16,7 +21,6 @@ const SideMenu:React.FC = () => {
     }
 
     const [nsfwMode, setNsfwMode] = useState<boolean>(getNsfwMode());
-    const [favedThreads, setFavedThreads] = useState<FavedThread[]>(parseFavedThreads());
 
     const setNsfwModeAction = () => {
         const currentNsfw = localStorage.getItem('nsfw') === "1";
@@ -27,6 +31,7 @@ const SideMenu:React.FC = () => {
     }
 
     const toggleMenu = () => {
+        setFavedThreads(parseFavedThreads());
         setMenuOpen(!menuOpen);
         if (!menuOpen) {
             fetchThreadData();
@@ -77,7 +82,6 @@ const SideMenu:React.FC = () => {
                         return {...thread};
                     });
                     saveFavedThreads(updatedData);
-
                 })
                 .catch((error) => {
                     if (error.status === 404) {
@@ -98,7 +102,7 @@ const SideMenu:React.FC = () => {
         }, 60000);
 
         return () => clearInterval(interval);
-    }, []);
+    });
 
     return (
         <div className="relative"  {...handlers}>

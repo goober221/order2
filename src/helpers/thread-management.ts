@@ -39,7 +39,7 @@ export function favThread(threadNumber: string, postCount: number | undefined, t
             updatedThreads = [...updatedThreads, newThread];
         }
         saveFavedThreads(updatedThreads);
-        return parseFavedThreads();
+        return updatedThreads;
     });
 }
 
