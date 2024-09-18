@@ -6,7 +6,6 @@ export function hideThread(threadNumber: string, setHiddenThreads: React.Dispatc
         let updatedThreads = [...prev];
         if (updatedThreads.includes(threadNumber)) {
             updatedThreads = updatedThreads.filter(i => i !== threadNumber);
-            return updatedThreads;
         } else {
             updatedThreads = [...updatedThreads, threadNumber];
         }
