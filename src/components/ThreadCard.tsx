@@ -119,7 +119,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread, isMobile, nsfwMode, thr
 
                         <div
                             className={`flex gap-3 mt-2 right-2 items-center top-2 to-thread-link ${isMobile ? 'mb-3 justify-center' : 'justify-end'}`}>
-                        <span className={`text-black dark:text-white cursor-pointer `} onClick={() => {
+                        <span className={`text-orange-600 dark:text-white cursor-pointer `} onClick={() => {
                             onToggleFav(thread.num.toString(), thread.posts_count, thread.subject)
                         }}>
                             {threadIsFaved ? (

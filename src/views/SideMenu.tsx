@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, {useEffect } from "react";
 import useDarkMode from "../effects/udeDarkMode.ts";
 import {useSwipeable} from "react-swipeable";
 import axios from "axios";
@@ -8,27 +8,14 @@ import {FavedThread} from "../models/Thread.ts";
 
 interface SideMenuProps {
     favedThreads: FavedThread[];
+    menuOpen: boolean;
+    isScrolled: boolean;
     setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>;
+    setMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads}) => {
-    const [menuOpen, setMenuOpen] = useState(false);
-
+const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOpen, setMenuOpen, isScrolled}) => {
     const [isDarkMode, toggleDarkMode] = useDarkMode();
-
-    const getNsfwMode = () => {
-        return localStorage.getItem('nsfw') === "1";
-    }
-
-    const [nsfwMode, setNsfwMode] = useState<boolean>(getNsfwMode());
-
-    const setNsfwModeAction = () => {
-        const currentNsfw = localStorage.getItem('nsfw') === "1";
-        const newState = currentNsfw ? "0" : "1";
-        setNsfwMode(newState === '1');
-        console.info(`nsfwMode is ${nsfwMode ? 'off' : 'on'}`);
-        localStorage.setItem('nsfw', newState);
-    }
 
     const toggleMenu = () => {
         setFavedThreads(parseFavedThreads());
@@ -102,15 +89,15 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads}) => {
         }, 60000);
 
         return () => clearInterval(interval);
-    });
+    }, []);
 
     return (
         <div className="relative"  {...handlers}>
             <div className="bg-transparent h-100vh w-1/5 fixed top-0 left-0"></div>
             <div
-                className={`fixed top-4 p-2 z-50 rounded transition-all bg-black dark:bg-white dark:text-black bg-opacity-35 dark:bg-opacity-35 duration-300 transform ${
-                    menuOpen ? "right-4" : "left-4 "
-                }`}
+                className={`fixed top-3 p-2 z-50 rounded transition-all bg-black dark:bg-white dark:text-black bg-opacity-90 dark:bg-opacity-90 duration-300 transform 
+                ${menuOpen ? "right-3" : "left-3"}
+                ${isScrolled && !menuOpen ? 'bg-white text-orange-600' : 'bg-orange-600'}`}
                 onClick={toggleMenu}
             >
                 {menuOpen ?
@@ -170,7 +157,6 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads}) => {
                     ))}
                 </ul>
                 <div className="absolute bottom-2 w-full flex items-center justify-center">
-                    <button className="mr-3 dark:text-white" onClick={setNsfwModeAction}>NSFW</button>
                     <button
                         onClick={toggleDarkMode}
                         className="p-2 ml-3  text-sm bg-gray-200 dark:bg-gray-900 text-black dark:text-white rounded-md"

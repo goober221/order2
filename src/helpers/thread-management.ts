@@ -1,4 +1,3 @@
-import {isElementInViewport} from "./utilities.ts";
 import {FavedThread} from "../models/Thread.ts";
 
 export function hideThread(threadNumber: string, setHiddenThreads: React.Dispatch<React.SetStateAction<string[]>>) {
@@ -12,14 +11,6 @@ export function hideThread(threadNumber: string, setHiddenThreads: React.Dispatc
         localStorage.setItem('hiddenThreads', updatedThreads.join(','));
         return updatedThreads;
     });
-}
-
-// Method to scroll the thread card into view if it's not fully visible
-export function scrollToThreadIfNotVisible(threadNumber: string) {
-    const threadCard = document.getElementById(`thread-${threadNumber}`);
-    if (threadCard && !isElementInViewport(threadCard)) {
-        threadCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
 }
 
 export function favThread(threadNumber: string, postCount: number | undefined, title: string | undefined, setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>) {

@@ -2,18 +2,21 @@ import {useEffect, useState} from 'react';
 import ThreadCard from "../components/ThreadCard.tsx";
 import {BoardData} from "../models/BoardData.ts";
 import axios from "axios";
-import {favThread, hideThread, parseFavedThreads} from "../helpers/thread-management.ts";
+import {favThread, hideThread, parseFavedThreads } from "../helpers/thread-management.ts";
 import {FavedThread} from "../models/Thread.ts";
 
 interface PageData {
     isMobile: boolean;
+    loading: boolean;
     favedThreads: FavedThread[];
     setFavedThreads: React.Dispatch<React.SetStateAction<FavedThread[]>>;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    nsfwMode: boolean;
 }
 
-const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads }) => {
+const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads, nsfwMode, setLoading, loading }) => {
     const [data, setData] = useState<BoardData | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+
 
     const [hiddenThreads, setHiddenThreads] = useState<string[]>(() => {
         const storedThreads = localStorage.getItem('hiddenThreads');
@@ -28,12 +31,6 @@ const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads }) 
         setFavedThreads(parseFavedThreads());
         favThread(threadNumber, postCount, title, setFavedThreads);
     };
-
-    const getNsfwMode = () => {
-        return localStorage.getItem('nsfw') === '1';
-    };
-
-    const [nsfwMode] = useState<boolean>(getNsfwMode());
 
     useEffect(() => {
         axios
@@ -70,9 +67,8 @@ const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads }) 
                     <span className="sr-only">Loading...</span>
                 </div>
             ) : (
-                <div className="w-full h-full bg-white dark:bg-gray-900 ">
+                <div className="pt-14 w-full h-full bg-white dark:bg-gray-900 ">
                     <div className="gap-4">
-                        <p className="pt-4 text-3xl">/b</p>
                         {data?.threads?.map((thread) => {
                             const threadIsFaved = !!favedThreads.find((t) => {
                                 return t.num.toString() === thread.num.toString();
