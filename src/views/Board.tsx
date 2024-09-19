@@ -17,7 +17,6 @@ interface PageData {
 const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads, nsfwMode, setLoading, loading }) => {
     const [data, setData] = useState<BoardData | null>(null);
 
-
     const [hiddenThreads, setHiddenThreads] = useState<string[]>(() => {
         const storedThreads = localStorage.getItem('hiddenThreads');
         return storedThreads ? storedThreads.split(',') : [];
@@ -42,6 +41,10 @@ const Board: React.FC<PageData> = ({ isMobile, favedThreads, setFavedThreads, ns
             .catch((error) => {
                 console.log('Error fetching data from 2ch:', error);
             });
+    }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
     }, []);
 
     return (

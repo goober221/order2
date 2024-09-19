@@ -1,5 +1,0 @@
-[[redirects]]
-  from = "/api/*"
-  to = "https://2ch.hk/:splat"
-  status = 200
-  force = true

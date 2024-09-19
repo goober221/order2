@@ -1,4 +1,4 @@
-import {Thread} from "../models/Thread.ts";
+import {ThreadObj} from "../models/Thread.ts";
 import '../styles/ThreadCard.css'
 import React, {useState} from "react";
 import SlideShow from "./SlideShow.tsx";
@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import ImageWidget from "./ImageWidget.tsx";
 
 interface ThreadCardProps {
-    thread: Thread;
+    thread: ThreadObj;
     isMobile: boolean;
     nsfwMode: boolean;
     threadIsHidden: boolean;
