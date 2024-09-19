@@ -21,13 +21,13 @@ function App() {
 
     return (
       <>
-          <SnackbarProvider />
-          <SideMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} isScrolled={isScrolled} favedThreads={favedThreads} setFavedThreads={setFavedThreads}/>
-          <Header loading={loading} setNsfwMode={setNsfwMode} isScrolled={isScrolled} setIsScrolled={setIsScrolled}></Header>
           <BrowserRouter>
+              <SnackbarProvider />
+              <SideMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} isScrolled={isScrolled} favedThreads={favedThreads} setFavedThreads={setFavedThreads}/>
+              <Header loading={loading} setNsfwMode={setNsfwMode} isScrolled={isScrolled} setIsScrolled={setIsScrolled}></Header>
               <Routes>
                   <Route path="/" element={<Board loading={loading} isMobile={isMobile} favedThreads={favedThreads} nsfwMode={nsfwMode} setLoading={setLoading} setFavedThreads={setFavedThreads}/>}></Route>
-                  <Route path="/thread/:id" element={<Thread />} />
+                  <Route path="/thread/:id" element={<Thread nsfwMode={nsfwMode} isMobile={isMobile}/>} />
               </Routes>
           </BrowserRouter>
       </>

@@ -2,9 +2,8 @@ import React, {useEffect } from "react";
 import useDarkMode from "../effects/udeDarkMode.ts";
 import {useSwipeable} from "react-swipeable";
 import axios from "axios";
-import {BoardData} from "../models/BoardData.ts";
 import {favThread, parseFavedThreads, saveFavedThreads} from "../helpers/thread-management.ts";
-import {FavedThread} from "../models/Thread.ts";
+import {FavedThread, ThreadInfoObj} from "../models/Thread.ts";
 
 interface SideMenuProps {
     favedThreads: FavedThread[];
@@ -53,16 +52,16 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOp
             if (!threadNum) {
                 return;
             }
-
-            axios.get<BoardData>(`/api/b/res/${threadNum}.json`)
+            axios.get<ThreadInfoObj>(`/api/api/mobile/v2/info/b/${threadNum}`)
                 .then((response) => {
-                    const posts_count  = response.data.threads[0].posts?.length ?? 0;
+                    const posts_count  = response.data.thread.posts ?? 0;
                     const updatedData = favedThreads.map(thread => {
+
                         if (thread.num === threadNum) {
                             return {
                                 ...thread,
                                 posts_old:  thread.posts_old < posts_count ? posts_count : thread.posts_old,
-                                posts_new: thread.posts_old < posts_count ? posts_count - thread.posts_old : 0,
+                                posts_new: thread.posts_old < posts_count ? posts_count - thread.posts_old + thread.posts_new : 0,
                                 title: thread.title
                             }
                         }
@@ -80,7 +79,6 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOp
         });
     };
 
-    // Fetch thread data on component mount and every 60 seconds
     useEffect(() => {
         fetchThreadData();
 
@@ -95,23 +93,31 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOp
         <div className="relative"  {...handlers}>
             <div className="bg-transparent h-100vh w-1/5 fixed top-0 left-0"></div>
             <div
-                className={`fixed top-3 p-2 z-50 rounded transition-all bg-black dark:bg-white dark:text-black bg-opacity-90 dark:bg-opacity-90 duration-300 transform 
-                ${menuOpen ? "right-3" : "left-3"}
-                ${isScrolled && !menuOpen ? 'bg-white text-orange-600' : 'bg-orange-600'}`}
-                onClick={toggleMenu}
+                className={`fixed top-3 p-2 z-50 rounded transition-all duration-300 transform 
+                left-3`}
+
             >
                 {menuOpen ?
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                                 stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
-                    </svg>
-                    :
+                    <div className={`flex gap-2 text-orange-600 dark:text-white`}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
-                             stroke="currentColor" className="size-6">
+                             stroke="currentColor" className="size-8" onClick={toggleMenu}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="size-8" onClick={fetchThreadData}>
+                            <path strokeLinecap="round" strokeLinejoin="round"
+                                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"/>
+                        </svg>
+                    </div>
+                    :
+                    <div className={`'text-orange-600 dark:text-white bg-opacity-90 dark:bg-opacity-90 ${isScrolled && !menuOpen ? 'text-white' : 'text-orange-600'}'`}
+                         onClick={toggleMenu}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
+                             stroke="currentColor" className="size-8">
                             <path strokeLinecap="round" strokeLinejoin="round"
                                   d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
                         </svg>
+                    </div>
                 }
             </div>
 
@@ -120,39 +126,41 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOp
                     menuOpen ? "translate-x-0" : "-translate-x-full"
                 }`}
             >
-            <h1 className="mt-5 text-2xl text-black dark:text-white">Избранное</h1>
+                <h1 className="mt-5 text-2xl text-black dark:text-white">Избранное</h1>
                 <ul className="p-6 space-y-4 text-black dark:text-white">
                     {favedThreads.map((thread) => (
                         <li
                             key={thread.num}
                             className="flex items-center justify-between space-x-2 p-2 border-b dark:border-gray-700"
                         >
-                            {/* Thread number and title */}
                             <div className="flex-1 overflow-hidden">
                             <span className="block text-start text-sm font-medium truncate">
                               {thread.title}
                             </span>
-                                                </div>
-                                                {/* Delete icon */}
-                                                <span
-                                                    className="cursor-pointer text-red-500 hover:text-red-700"
-                                                    onClick={() => handleToggleFav(thread.num.toString(), 0)}
-                                                >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                            >
-                              <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </span>
+                            </div>
+                            <div className="flex overflow-hidden gap-2">
+                                <div className='h-1/2 w-10'>
+                                    <p className='text-black dark:text-white'>{thread.posts_new}</p>
+                                </div>
+                                <span
+                                    className="cursor-pointer text-red-500 hover:text-red-700"
+                                    onClick={() => handleToggleFav(thread.num.toString(), 0)}>
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="w-6 h-6">
+                                      <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          d="M6 18L18 6M6 6l12 12"
+                                      />
+                                    </svg>
+                                </span>
+                            </div>
+
                         </li>
                     ))}
                 </ul>
@@ -181,7 +189,6 @@ const SideMenu:React.FC<SideMenuProps> = ({favedThreads, setFavedThreads, menuOp
 
             </div>
 
-            {/* Overlay (optional) */}
             {menuOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-30"

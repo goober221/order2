@@ -22,3 +22,26 @@ export interface Post {
     trip: string;
     views: number;
 }
+
+export interface PostDTO {
+    banned: number;
+    board: string;
+    closed: number;
+    comment: string;
+    date: string;
+    email: string;
+    endless: number;
+    files: ThreadFile[];
+    lasthit: number;
+    name: string;
+    num: number;
+    number: number;
+    op: number;
+    parent: number;
+    sticky: number;
+    subject: string;
+    tags: string;
+    timestamp: number;
+    trip: string;
+    views: number;
+}
