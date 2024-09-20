@@ -10,11 +10,13 @@ import {FavedThread} from "./models/Thread.ts";
 import {useState} from "react";
 import Header from "./components/Header.tsx";
 import {getNsfwMode} from "./services/board-settings.ts";
+import TextWritingPage from "./views/TextWritingPage.tsx";
 
 function App() {
     const isMobile = useMobileDetect();
     const [favedThreads, setFavedThreads] = useState<FavedThread[]>(parseFavedThreads());
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const [text, setText] = useState<string>(localStorage.getItem("savedText") ?? '');
     const [isScrolled, setIsScrolled] = useState(false);
     const [nsfwMode, setNsfwMode] = useState<boolean>(getNsfwMode());
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,6 +31,7 @@ function App() {
                   <Route path="/" element={<Board loading={loading} isMobile={isMobile} favedThreads={favedThreads} nsfwMode={nsfwMode} setLoading={setLoading} setFavedThreads={setFavedThreads}/>}></Route>
                   <Route path="/thread/:id" element={<Thread nsfwMode={nsfwMode} isMobile={isMobile}/>} />
               </Routes>
+              <TextWritingPage setText={setText} text={text} isMobile={isMobile}></TextWritingPage>
           </BrowserRouter>
       </>
 

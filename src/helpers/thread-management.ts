@@ -33,7 +33,6 @@ export function favThread(threadNumber: string, postCount: number | undefined, t
     });
 }
 
-// Function to check if a thread is hidden
 export function checkThreadIsHidden(threadNumber: string): boolean {
     const hiddenThreads = localStorage.getItem('hiddenThreads');
     if (hiddenThreads) {
@@ -46,15 +45,9 @@ export function checkThreadIsHidden(threadNumber: string): boolean {
 export const parseFavedThreads = (): FavedThread[] => {
     const favedThreads = localStorage.getItem('favedThreads');
     if (!favedThreads) return [];
-    return favedThreads.split('{}').map(thread => {
-        const [num, posts_old, posts_new, title] = thread.split('/').map(value => value.split('=')[1]);
-        return { num, posts_old: Number(posts_old), posts_new: Number(posts_new), title };
-    });
+    return JSON.parse(favedThreads) as FavedThread[];
 };
 
 export const saveFavedThreads = (threads: FavedThread[]) => {
-    const favedThreadsString = threads
-        .map(thread => `num=${thread.num}/posts_old=${thread.posts_old}/posts_new=${thread.posts_new}/title=${thread.title}`)
-        .join('{}');
-    localStorage.setItem('favedThreads', favedThreadsString);
+    localStorage.setItem('favedThreads', JSON.stringify(threads));
 };
