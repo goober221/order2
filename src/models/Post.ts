@@ -45,3 +45,18 @@ export interface PostDTO {
     trip: string;
     views: number;
 }
+
+export interface PostData {
+    board: string;
+    thread: string;
+    op_mark: string;
+    usercode: string;
+    code: string;
+    captcha_type: string;
+    email: string;
+    name: string;
+    subject: string;
+    icon: string;
+    comment: string;
+    file: File[];
+}

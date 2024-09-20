@@ -12,14 +12,12 @@ interface ThreadProps {
 const Thread: React.FC<ThreadProps> = ({isMobile, nsfwMode}) => {
     const [data, setData] = useState<ThreadDetailObj | null>(null);
     const { id } = useParams<{ id: string }>();
-    //const navigate = useNavigate();
 
     useEffect(() => {
         axios
             .get<ThreadDetailObj>(`/api/b/res/${id}.json`)
             .then((response) => {
                 setData(response.data);
-                // setLoading(false);
             })
             .catch((error) => {
                 console.log('Error fetching data from 2ch:', error);
@@ -31,11 +29,11 @@ const Thread: React.FC<ThreadProps> = ({isMobile, nsfwMode}) => {
     }, []);
 
     return (
-        <div>
+        <div className="pt-14 w-full h-full bg-white dark:bg-gray-900 ">
             <h1>Thread Page</h1>
             {data?.threads[0].posts?.map((post) => {
                 return (
-                    <PostCard nsfwMode={nsfwMode} isMobile={isMobile} post={post}></PostCard>
+                    <PostCard key={post.num} nsfwMode={nsfwMode} isMobile={isMobile} post={post}></PostCard>
                 )
             })}
         </div>
