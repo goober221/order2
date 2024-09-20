@@ -1,7 +1,5 @@
 import React, { useState, useRef, ChangeEvent, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
-import { PostData } from "../models/Post";
-
 interface TextEditorProps {
     isMobile: boolean;
     setText: React.Dispatch<React.SetStateAction<string>>;
@@ -91,27 +89,27 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
         }
     }, [setText]);
 
-    // Handle post submission
-    const handlePost = () => {
-        const postData: PostData = {
-            board: "b",
-            thread: "",
-            op_mark: "",
-            usercode: "",
-            code: "",
-            captcha_type: "",
-            email: "",
-            name: "",
-            subject: "",
-            icon: "",
-            comment: text,
-            file: [],
-        };
-
-        console.log("Posting data:", postData);
-        setText("");
-        localStorage.removeItem("savedText");
-    };
+    // // Handle post submission
+    // const handlePost = () => {
+    //     const postData: PostData = {
+    //         board: "b",
+    //         thread: "",
+    //         op_mark: "",
+    //         usercode: "",
+    //         code: "",
+    //         captcha_type: "",
+    //         email: "",
+    //         name: "",
+    //         subject: "",
+    //         icon: "",
+    //         comment: text,
+    //         file: [],
+    //     };
+    //
+    //     console.log("Posting data:", postData);
+    //     setText("");
+    //     localStorage.removeItem("savedText");
+    // };
 
     // Save text to local storage on change
     useEffect(() => {
