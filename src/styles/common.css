@@ -33,3 +33,31 @@
         background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
     }
 }
+
+.u {
+    text-decoration: underline;
+}
+
+.o {
+    text-decoration: overline;
+}
+
+.line-through {
+    text-decoration: line-through;
+}
+
+.spoiler {
+    background-color: #6a6a6a;
+    color: #6a6a6a;
+    transition: color 0.1s, background-color 0.1s;
+    cursor: pointer;
+}
+
+.spoiler:hover {
+    color: black;
+    background-color: #d1d1d1;
+}
+
+.unkfunc {
+    color: green;
+}

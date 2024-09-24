@@ -37,6 +37,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread, isMobile, nsfwMode, thr
         ? fullComment.substring(0, maxLength) + "..."
         : fullComment;
 
+
     const toggleExpand = () => {
         const scrollableDiv = document.getElementById(`thread-${thread.num}`);
         if (scrollableDiv) {
@@ -104,7 +105,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread, isMobile, nsfwMode, thr
                                 <p
                                     className={`comment mb-4 inline text-base text-black dark:text-white`}
                                     dangerouslySetInnerHTML={{__html: isExpanded ? fullComment : truncatedComment}}
-                                ></p>
+                                >
+                                </p>
                                 {fullComment.length > maxLength && (
                                     <span
                                         onClick={toggleExpand}

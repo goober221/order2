@@ -7,7 +7,7 @@ import {SnackbarProvider} from "notistack";
 import SideMenu from "./views/SideMenu.tsx";
 import {parseFavedThreads} from "./helpers/thread-management.ts";
 import {FavedThread} from "./models/Thread.ts";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Header from "./components/Header.tsx";
 import {getNsfwMode} from "./services/board-settings.ts";
 import TextWritingPage from "./views/TextWritingPage.tsx";
@@ -20,6 +20,18 @@ function App() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [nsfwMode, setNsfwMode] = useState<boolean>(getNsfwMode());
     const [loading, setLoading] = useState<boolean>(true);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (text) {
+                localStorage.setItem("savedText", text);
+            }
+        }, 500);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [text]);
 
     return (
       <>
