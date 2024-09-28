@@ -70,7 +70,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
 
     return (
         <form>
-            <div className="dark:bg-gray-900 dark:text-white h-screen">
+            <div className="dark:bg-gray-900 dark:text-white">
                 <div className="max-w-lg mx-auto pt-10 px-4">
                     <div className="mb-4">
                         <label
@@ -106,7 +106,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
                             className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
                             onClick={() => insertTag("[spoiler]", "[/spoiler]")}
                         >
-                            <div className="p-2 bg-white dark:bg-gray-900 text-black w-3/4 h-3/4"></div>
+                            <div className="p-2 bg-white dark:bg-black text-black w-3/4 h-3/4"></div>
                         </div>
                         <div
                             className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md font-bold text-lg underline cursor-pointer"

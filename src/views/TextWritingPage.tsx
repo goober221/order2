@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import TextEditor from "../components/TextEditor.tsx";
-import {useSwipeable} from "react-swipeable";
+import { useSwipeable } from "react-swipeable";
+import CaptchaImage from "../components/emoji.tsx";
 
 interface TextWritingPageProps {
     isMobile: boolean;
@@ -53,13 +54,25 @@ const TextWritingPage: React.FC<TextWritingPageProps> = ({
     };
 
     return (
-        <div className="relative h-screen w-screen">
-            <div
-                ref={setRefs(editorRef, swipeHandlers.ref)}
-                className={`fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t-2 ${editorHeight !== 0 ? 'border-orange-600 dark:border-white' : ''} transition-all duration-300 ease-in-out`}
-                style={{ height: `${editorHeight}px` }}
-            >
-                <TextEditor text={text} setText={setText} isMobile={isMobile} />
+        <div className={`relative ${editorHeight === 0 ? '' : 'h-screen w-screen'}`}>
+            <div className='fixed flex flex-col'>
+                <div
+                    ref={setRefs(editorRef, swipeHandlers.ref)}
+                    className={`fixed flex flex-col items-center justify-center bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t-2 transition-all duration-300 ease-in-out ${editorHeight === 0 ? 'hidden' : ''}`}
+                    style={{
+                        height: `${editorHeight}px`,
+                        overflow: editorHeight === 0 ? 'hidden' : 'auto',
+                        visibility: editorHeight === 0 ? 'hidden' : 'visible',
+                        minHeight: editorHeight === 0 ? '0' : 'auto'
+                    }}
+                >
+                    {editorHeight !== 0 && (
+                        <>
+                            <TextEditor text={text} setText={setText} isMobile={isMobile} />
+                            <CaptchaImage />
+                        </>
+                    )}
+                </div>
             </div>
 
             <div
@@ -77,7 +90,7 @@ const TextWritingPage: React.FC<TextWritingPageProps> = ({
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}
                              stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round"
-                                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"/>
+                                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                         </svg>
                     ) : (
                         <path

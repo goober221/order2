@@ -102,7 +102,7 @@ const SlideShow: React.FC<SlideShowProps> = ({ files, onClose, selectedFileIndex
     const currentFile = files[currentIndex];
 
     return (
-        <div className="slider-overlay">
+        <div className="slider-overlay" {...handlers}>
             <button className="slider-close" onClick={onClose}>
                 &times;
             </button>

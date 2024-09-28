@@ -103,7 +103,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ thread, isMobile, nsfwMode, thr
 
                             <div className="flex-1 text-left ju mt-5 md:mt-0 md:ml-5">
                                 <p
-                                    className={`comment mb-4 inline text-base text-black dark:text-white`}
+                                    className={`comment mb-4 text-sm inline text-base text-black dark:text-white`}
                                     dangerouslySetInnerHTML={{__html: isExpanded ? fullComment : truncatedComment}}
                                 >
                                 </p>
