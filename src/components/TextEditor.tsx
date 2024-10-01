@@ -70,12 +70,10 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
 
     return (
         <form>
-            <div className="dark:bg-gray-900 dark:text-white">
+            <div className="max-w-full min-w-72 dark:bg-gray-900 dark:text-white">
                 <div className="max-w-lg mx-auto pt-10 px-4">
                     <div className="mb-4">
-                        <label
-                            className="block text-sm font-medium text-black dark:text-white"
-                        >
+                        <label className="block text-sm font-medium text-black dark:text-white">
                             Email
                         </label>
                         <input
@@ -88,58 +86,59 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
                         />
                     </div>
 
-
-                    <div className={`flex ${isMobile ? "flex-row" : "flex-row"} gap-1 mt-4`}>
+                    {/* Flex Container for Formatting Buttons */}
+                    <div className={`flex ${isMobile ? "flex-wrap" : "flex-row"} gap-1 mt-4`}>
                         <div
-                            className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
+                            className="flex items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
                             onClick={() => insertTag("[b]", "[/b]")}
                         >
                             b
                         </div>
                         <div
-                            className="flex items-center p-2 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg italic cursor-pointer"
+                            className="flex items-center p-2 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg italic cursor-pointer"
                             onClick={() => insertTag("[i]", "[/i]")}
                         >
                             i
                         </div>
                         <div
-                            className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
+                            className="flex items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
                             onClick={() => insertTag("[spoiler]", "[/spoiler]")}
                         >
-                            <div className="p-2 bg-white dark:bg-black text-black w-3/4 h-3/4"></div>
+                            <div className="p-2 bg-dark dark:bg-black text-black rounded-sm w-3/4 h-3/4"></div>
                         </div>
                         <div
-                            className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md font-bold text-lg underline cursor-pointer"
+                            className="flex items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md font-bold text-lg underline cursor-pointer"
                             onClick={() => insertTag("[u]", "[/u]")}
                         >
                             u
                         </div>
                         <div
-                            className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md font-bold text-lg overline cursor-pointer"
+                            className="flex items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md font-bold text-lg overline cursor-pointer"
                             onClick={() => insertTag("[o]", "[/o]")}
                         >
                             o
                         </div>
                         <div
-                            className="flex items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg line-through cursor-pointer"
+                            className="flex items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg line-through cursor-pointer"
                             onClick={() => insertTag("[s]", "[/s]")}
                         >
                             S
                         </div>
                         <div
-                            className="flex relative items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
+                            className="flex relative items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
                             onClick={() => insertTag("[sup]", "[/sup]")}
                         >
-                            A<span className='absolute top-1 right-2 text-xs align-text-top'>a</span>
+                            A<span className="absolute top-0 right-1 text-xs align-text-top">a</span>
                         </div>
                         <div
-                            className="flex relative items-center p-3 justify-center h-10 w-10 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
+                            className="flex relative items-center p-3 justify-center h-8 w-8 mb-2 bg-orange-600 dark:bg-white dark:text-black rounded-md text-lg font-bold cursor-pointer"
                             onClick={() => insertTag("[sub]", "[/sub]")}
                         >
-                            A<span className='absolute bottom-1 right-2 text-xs align-text-top'>a</span>
+                            A<span className="absolute bottom-0 right-1 text-xs align-text-top">a</span>
                         </div>
                     </div>
 
+                    {/* Textarea */}
                     <textarea
                         ref={textAreaRef}
                         value={internalText}
@@ -147,13 +146,13 @@ const TextEditor: React.FC<TextEditorProps> = ({ text, setText, isMobile }) => {
                         onBlur={periodicTextSave}
                         placeholder="Enter text here..."
                         maxLength={maxTextLength}
-                        rows={10}
+                        rows={8}
                         className="w-full p-2 border-2 border-orange-600 dark:border-white rounded-md bg-white dark:bg-gray-800 text-black dark:text-white resize-y"
                     />
-
                 </div>
             </div>
         </form>
+
     );
 };
 
